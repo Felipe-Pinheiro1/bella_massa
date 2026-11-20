@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Mesas · Bella Massa{% endblock %}
+{% block content %}
+<h1>Mesas</h1>
+<div class="grade">
+  {% for m in mesas %}
+  <div class="mesa {{ m.status }}">
+    <em>mesa</em><strong>{{ m.numero }}</strong>
+    <form method="post">{% csrf_token %}
+      <input type="hidden" name="mesa" value="{{ m.pk }}">
+      <select name="status" onchange="this.form.submit()">
+        {% for valor, nome in status %}
+        <option value="{{ valor }}" {% if valor == m.status %}selected{% endif %}>{{ nome }}</option>
+        {% endfor %}
+      </select>
+      <noscript><button class="btn">OK</button></noscript>
+    </form>
+    <small>{{ m.pedidos_em_aberto.count }} pedido(s) em aberto</small>
+  </div>
+  {% empty %}<p>Nenhuma mesa cadastrada.</p>{% endfor %}
+</div>
+{% endblock %}

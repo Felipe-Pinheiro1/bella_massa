@@ -1,0 +1,8 @@
+# Dependencias do back (Django) do Bella Massa
+# Versoes extraidas do .venv que veio no projeto (Python 3.11.6).
+# Instalar com:  pip install -r requirements.txt
+
+Django==5.2.19      # framework web (models, views, templates, auth, ORM)
+asgiref==3.13.0     # exigido pelo Django (camada ASGI/WSGI)
+sqlparse==0.6.1     # exigido pelo Django (parser de SQL usado nas migracoes)
+tzdata==2026.6      # exigido pelo Django no Windows (banco de fusos horarios; TIME_ZONE = America/Bahia)

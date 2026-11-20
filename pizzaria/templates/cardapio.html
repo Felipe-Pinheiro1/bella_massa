@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Cardápio · Bella Massa{% endblock %}
+{% block content %}
+<h1>Cardápio</h1>
+
+<form method="post" class="card">{% csrf_token %}
+  <input type="hidden" name="id" value="{{ editando.pk|default:'' }}">
+  <strong>{% if editando %}Editando: {{ editando.nome }}{% else %}Novo produto{% endif %}</strong><br><br>
+  <input name="nome" placeholder="Nome" value="{{ editando.nome|default:'' }}" required>
+  <input name="categoria" placeholder="Categoria (pizzas, bebidas)" value="{{ editando.categoria|default:'' }}" required>
+  <input name="preco" placeholder="Preço" size="8" value="{{ editando.preco|default:'' }}" required>
+  <input name="descricao" placeholder="Descrição" size="30" value="{{ editando.descricao|default:'' }}">
+  <button class="btn vinho">Salvar</button>
+  {% if editando %}<a class="btn" href="{% url 'cardapio' %}">Cancelar</a>{% endif %}
+</form>
+
+<table>
+  <tr><th>Produto</th><th>Categoria</th><th>Preço</th><th></th></tr>
+  {% for p in produtos %}
+  <tr>
+    <td>{{ p.nome }}<br><small>{{ p.descricao }}</small></td>
+    <td>{{ p.categoria }}</td>
+    <td>R$ {{ p.preco }}</td>
+    <td>
+      <a class="btn" href="?editar={{ p.pk }}">Editar</a>
+      <form method="post" style="display:inline">{% csrf_token %}
+        <input type="hidden" name="acao" value="remover"><input type="hidden" name="id" value="{{ p.pk }}">
+        <button class="btn vinho" onclick="return confirm('Remover {{ p.nome|escapejs }}?')">Remover</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

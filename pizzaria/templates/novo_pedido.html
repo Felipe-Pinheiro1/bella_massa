@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Novo pedido · Bella Massa{% endblock %}
+{% block content %}
+<h1>Novo pedido</h1>
+<form method="post">{% csrf_token %}
+  <div class="card">
+    <label><input type="radio" name="tipo" value="mesa" checked onchange="alterna()"> Mesa</label>
+    <label><input type="radio" name="tipo" value="delivery" onchange="alterna()"> Delivery</label>
+    <br><br>
+    <span id="box-mesa">
+      <select name="mesa">
+        {% for m in mesas %}<option value="{{ m.pk }}">Mesa {{ m.numero }}</option>{% endfor %}
+      </select>
+    </span>
+    <span id="box-delivery" style="display:none">
+      <select name="canal">
+        {% for c in canais %}<option>{{ c }}</option>{% endfor %}
+      </select>
+      <input name="cliente" placeholder="Cliente (opcional)">
+    </span>
+  </div>
+
+  <table>
+    <tr><th>Produto</th><th>Preço</th><th>Qtd</th></tr>
+    {% for p in produtos %}
+    <tr>
+      <td>{{ p.nome }} <small>({{ p.categoria }})</small></td>
+      <td>R$ {{ p.preco }}</td>
+      <td><input type="number" name="qtd_{{ p.pk }}" min="0" value="0" style="width:70px"></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br><button class="btn vinho">Enviar para a cozinha</button>
+</form>
+<script>
+  function alterna() {
+    const delivery = document.querySelector('[name=tipo]:checked').value === 'delivery';
+    document.getElementById('box-mesa').style.display = delivery ? 'none' : '';
+    document.getElementById('box-delivery').style.display = delivery ? '' : 'none';
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Bella Massa{% endblock %}</title>
+  <style>
+    :root { --vinho:#98201A; --creme:#F9EFE3; --marrom:#42221F; --verde:#1F3A1A; --bege:#E7DCCF; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--creme); color:var(--marrom);
+           font-family: system-ui, "Segoe UI", sans-serif; }
+    header { background:var(--vinho); color:var(--creme); padding:12px 20px;
+             display:flex; flex-wrap:wrap; align-items:center; gap:16px; }
+    header b { font-size:1.3rem; font-style:italic; margin-right:auto; }
+    header a, header button { color:var(--creme); text-decoration:none; background:none;
+             border:0; font:inherit; cursor:pointer; padding:4px 8px; border-radius:6px; }
+    header a.ativo { background:var(--marrom); }
+    main { max-width:900px; margin:24px auto; padding:0 16px; }
+    h1 { color:var(--vinho); margin-top:0; }
+    .msg { padding:10px 14px; border-radius:8px; margin-bottom:12px; }
+    .msg.success { background:#dcefd8; color:var(--verde); }
+    .msg.error { background:#f6d5d2; color:var(--vinho); }
+    .card { background:var(--bege); border-radius:10px; padding:14px; margin-bottom:12px;
+            box-shadow:0 2px 4px rgba(0,0,0,.15); }
+    table { width:100%; border-collapse:collapse; }
+    th, td { text-align:left; padding:8px; border-bottom:1px solid var(--bege); }
+    input, select, textarea { padding:8px; border:1px solid #bbb; border-radius:6px;
+                              font:inherit; background:#fff; }
+    .btn { background:var(--marrom); color:var(--creme); border:0; border-radius:6px;
+           padding:8px 14px; font:inherit; cursor:pointer; text-decoration:none; }
+    .btn.vinho { background:var(--vinho); }
+    .btn.verde { background:var(--verde); }
+    .grade { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
+    .mesa { text-align:center; border-radius:10px; padding:14px; color:var(--creme);
+            box-shadow:0 2px 4px rgba(0,0,0,.2); }
+    .mesa.livre { background:var(--marrom); }
+    .mesa.ocupada { background:var(--vinho); }
+    .mesa.aguardando { background:var(--verde); }
+    .mesa strong { display:block; font-size:2rem; }
+  </style>
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <header>
+    <b>Pizzaria Bella Massa</b>
+    <a href="{% url 'mesas' %}" class="{% if request.resolver_match.url_name == 'mesas' %}ativo{% endif %}">Mesas</a>
+    <a href="{% url 'novo_pedido' %}" class="{% if request.resolver_match.url_name == 'novo_pedido' %}ativo{% endif %}">Novo pedido</a>
+    <a href="{% url 'cozinha' %}" class="{% if request.resolver_match.url_name == 'cozinha' %}ativo{% endif %}">Cozinha</a>
+    {% if user.is_staff %}
+    <a href="{% url 'cardapio' %}" class="{% if request.resolver_match.url_name == 'cardapio' %}ativo{% endif %}">Cardápio</a>
+    {% endif %}
+    <form method="post" action="{% url 'logout' %}" style="margin:0">{% csrf_token %}
+      <button>Sair ({{ user.username }})</button>
+    </form>
+  </header>
+  {% endif %}
+  <main>
+    {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

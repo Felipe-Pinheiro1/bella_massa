@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Cozinha · Bella Massa{% endblock %}
+{% block content %}
+<h1>Cozinha</h1>
+<meta http-equiv="refresh" content="15">
+{% for p in pedidos %}
+<div class="card">
+  <strong>#{{ p.pk }} · {{ p.origem }}</strong>
+  <span style="float:right">{{ p.get_status_display }} · {{ p.criado_em|time:"H:i" }}</span>
+  <ul>
+    {% for i in p.itens.all %}<li>{{ i.quantidade }}× {{ i.produto.nome }}</li>{% endfor %}
+  </ul>
+  <form method="post" style="display:inline">{% csrf_token %}
+    <input type="hidden" name="pedido" value="{{ p.pk }}">
+    {% if p.status == 'pendente' %}
+      <button class="btn" name="status" value="em_preparo">Em preparo</button>
+    {% endif %}
+    <button class="btn verde" name="status" value="concluido">Concluído</button>
+  </form>
+</div>
+{% empty %}<p>Nenhum pedido pendente.</p>{% endfor %}
+{% endblock %}
